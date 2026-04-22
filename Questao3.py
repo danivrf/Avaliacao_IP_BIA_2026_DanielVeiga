@@ -5,14 +5,13 @@
 # Matricula: 202603050
 
 # Minha logica foi fazer algo que seguisse a ideia do CRUD, onde o usuario pode, excluir, criar;
-# dar opçoes para que o usuario consiga editar mais coisas dentro do etoque. 
+# dar opçoes para que o usuario consiga editar mais coisas dentro do etoque.
 # Importei o "datetime" e o "timedelta" do modulo datetime do Python.
 # Precisei do datetime para conseguir criar objetos de data reais.
 from datetime import datetime, timedelta
 
 # Aqui criei o dicionario principal do sistema, que chamei de "itens".
 itens = {}
-
 
 
 # FUNCOES AUXILIARES DE LEITURA VALIDADA
@@ -27,7 +26,7 @@ def ler_inteiro(prompt, minimo=0):
     # Para validar se e um inteiro, usei ".isdigit()" em vez de try/except,
     # lembrei que o senhor falou que poderia dar erros dependendo do codigo e pediu para evitar try/except.
     # O .isdigit() retorna True so se todos os caracteres forem digitos numericos.
-    
+
     # Se o valor for invalido, pergunto se o usuario quer tentar de novo.
     # Se ele disser "N", retorno None — esse None vai ser checado
     # pela funcao que me chamou para saber que a operacao foi cancelada.
@@ -155,6 +154,7 @@ def ler_data(prompt):
 
 # 1. FUNCAO PARA CADASTRAR ITENS
 
+
 def cadastrar_itens():
     # Primeiro pergunto quantos itens o usuario quer cadastrar de uma vez.
     # Uso minimo=1 porque nao faz sentido cadastrar zero itens.
@@ -250,7 +250,6 @@ def cadastrar_itens():
         print(f"Item cadastrado com sucesso em {data_cadastro_fmt}!")
 
 
-
 # 2. FUNCAO PARA EXCLUIR ITEM
 
 def excluir_item():
@@ -282,6 +281,7 @@ def excluir_item():
         print("Exclusao cancelada.")
 
 # 3. FUNCAO PARA VER ESTOQUE
+
 
 def ver_estoque():
     print("\n=====================")
@@ -320,7 +320,6 @@ def ver_estoque():
                       f"Valor unit.: R$ {mov['valor']:.2f}")
 
         print("-" * 40)
-
 
 
 # 4. FUNCAO PARA REGISTRAR MOVIMENTACOES
@@ -379,9 +378,8 @@ def registrar_movimentacoes():
         # escrever itens[nome] toda hora nas linhas abaixo.
         item = itens[nome]
 
-      
         # LOGICA DE ENTRADA
-       
+
         if tipo == "ENTRADA":
             # Numa entrada, aumento o saldo e adiciono o novo lote
             # ao FINAL da lista. No criterio PEPS, entradas mais recentes
@@ -398,9 +396,8 @@ def registrar_movimentacoes():
             })
             print(f"Entrada registrada com sucesso em {data_formatada}!")
 
-      
         # LOGICA DE SAIDA COM O CRITERIO PEPS
-       
+
         elif tipo == "SAIDA":
             # Antes de qualquer coisa, verifico se ha saldo suficiente.
             # Se nao houver, cancelo a operacao sem alterar nada.
@@ -453,6 +450,7 @@ def registrar_movimentacoes():
             print(f"Saida registrada com sucesso em {data_formatada}!")
 
 # 5. FUNCAO PARA GERAR RELATORIO FINAL
+
 
 def gerar_relatorio():
     print("\n=== RELATORIO FINAL ===\n")
@@ -533,7 +531,7 @@ def gerar_relatorio():
             maior_giro = (nome, item["total_saidas"])
 
         # EXIBICAO DO RELATORIO DE CADA ITEM
-     
+
         print(f"Item: {nome}")
         print(f"Data de cadastro        : {item['data_cadastro']}")
         print(f"Saldo atual             : {item['saldo']} {item['unidade']}")

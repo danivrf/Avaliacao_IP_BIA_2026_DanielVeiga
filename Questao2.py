@@ -63,7 +63,7 @@ df_limpo = df.copy()
 # - mantive dados potencialmente relevantes sempre que possivel
 # - evitei perda desnecessaria de informacao
 
-# COLUNAS DE TEXTO 
+# COLUNAS DE TEXTO
 
 # Converto para string e removo espacos para padronizar os dados textuais.
 # Isso ajuda a evitar problemas de comparacao e agrupamento.
@@ -76,14 +76,16 @@ df_limpo["cd_pai"] = df_limpo["cd_pai"].astype(str).str.strip()
 df_limpo["regiao"] = df_limpo["regiao"].astype(str).str.strip().str.title()
 
 
-# COLUNAS NUMERICAS 
+# COLUNAS NUMERICAS
 
 # O pd.to_numeric() converte os valores das colunas para numeros.
 # O errors="coerce" faz com que valores invalidos sejam transformados em NaN,
 # o que permite tratar esses problemas depois.
-df_limpo["populacao_atendida"] = pd.to_numeric(df_limpo["populacao_atendida"], errors="coerce")
+df_limpo["populacao_atendida"] = pd.to_numeric(
+    df_limpo["populacao_atendida"], errors="coerce")
 
-df_limpo["casos_suspeitos"] = pd.to_numeric(df_limpo["casos_suspeitos"], errors="coerce")
+df_limpo["casos_suspeitos"] = pd.to_numeric(
+    df_limpo["casos_suspeitos"], errors="coerce")
 
 # Guardo a quantidade inicial de linhas para depois comparar
 # quanto restou apos a limpeza.
@@ -100,7 +102,8 @@ df_limpo["casos_suspeitos"] = df_limpo["casos_suspeitos"].fillna(0)
 # Escolhi a mediana porque ela tende a sofrer menos influencia
 # de valores muito extremos do que a media.
 mediana_populacao = df_limpo["populacao_atendida"].median()
-df_limpo["populacao_atendida"] = df_limpo["populacao_atendida"].fillna(mediana_populacao)
+df_limpo["populacao_atendida"] = df_limpo["populacao_atendida"].fillna(
+    mediana_populacao)
 
 # Aqui eu removo apenas registros impossiveis ou inconsistentes:
 # - populacao_atendida precisa ser maior que 0
@@ -108,15 +111,17 @@ df_limpo["populacao_atendida"] = df_limpo["populacao_atendida"].fillna(mediana_p
 # - casos_suspeitos nao pode ser maior que a populacao atendida
 df_limpo = df_limpo[df_limpo["populacao_atendida"] > 0]
 df_limpo = df_limpo[df_limpo["casos_suspeitos"] >= 0]
-df_limpo = df_limpo[df_limpo["casos_suspeitos"] <= df_limpo["populacao_atendida"]]
+df_limpo = df_limpo[df_limpo["casos_suspeitos"]
+                    <= df_limpo["populacao_atendida"]]
 
 
-# COLUNA DE DATA 
+# COLUNA DE DATA
 
 # O pd.to_datetime() converte a coluna para tipo data.
 # O errors="coerce" evita erro caso alguma data esteja invalida,
 # convertendo valores problematicos para NaT.
-df_limpo["data_coleta"] = pd.to_datetime(df_limpo["data_coleta"], errors="coerce")
+df_limpo["data_coleta"] = pd.to_datetime(
+    df_limpo["data_coleta"], errors="coerce")
 
 # Aqui eu conto quantas datas invalidas existem apos a conversao.
 # Nao removi automaticamente esses registros porque,
@@ -135,7 +140,7 @@ print(df_limpo[df_limpo["data_coleta"].isnull()])
 print("\n")
 
 
-# DUPLICATAS 
+# DUPLICATAS
 
 # Removo duplicatas considerando id_cd e data_coleta juntos.
 # Escolhi esse criterio porque registros repetidos para o mesmo centro
@@ -170,7 +175,8 @@ print("\n")
 # casos_suspeitos / populacao_atendida * 1000
 # Multipliquei por 1000 para representar a incidencia por mil habitantes,
 # o que facilita a comparacao entre centros com populacoes diferentes.
-df_limpo["taxa_incidencia"] = (df_limpo["casos_suspeitos"] / df_limpo["populacao_atendida"] * 1000).round(4)
+df_limpo["taxa_incidencia"] = (
+    df_limpo["casos_suspeitos"] / df_limpo["populacao_atendida"] * 1000).round(4)
 
 print("===================================")
 print("ESTATÍSTICAS DA TAXA DE INCIDÊNCIA")
@@ -187,7 +193,6 @@ print("\n")
 print(f"Menor taxa: {df_limpo['taxa_incidencia'].min()}")
 print(f"Maior taxa: {df_limpo['taxa_incidencia'].max()}")
 print("\n")
-
 
 
 # 4. CLASSIFICACAO EPIDEMIOLOGICA COM apply E row
@@ -233,7 +238,6 @@ print("==================================\n")
 # O value_counts() conta quantas vezes cada classificacao aparece.
 print(df_limpo["nivel_alerta"].value_counts())
 print("\n")
-
 
 
 # 5. CLASSIFICACAO DOS CDs
@@ -300,12 +304,14 @@ relatorio = df_limpo.groupby("regiao").agg(
 
 # Arredondo a taxa media para 2 casas decimais
 # para deixar a exibicao mais organizada.
-relatorio["taxa_media_incidencia"] = relatorio["taxa_media_incidencia"].round(2)
+relatorio["taxa_media_incidencia"] = relatorio["taxa_media_incidencia"].round(
+    2)
 
 # Aqui eu monto a distribuicao dos niveis de alerta por regiao.
 # O pd.crosstab() conta quantos registros de cada nivel_alerta
 # existem dentro de cada regiao.
-distribuicao_alertas = pd.crosstab(df_limpo["regiao"], df_limpo["nivel_alerta"]).reset_index()
+distribuicao_alertas = pd.crosstab(
+    df_limpo["regiao"], df_limpo["nivel_alerta"]).reset_index()
 
 # Junto o relatorio principal com a distribuicao dos alertas.
 relatorio_final = pd.merge(
@@ -335,7 +341,8 @@ df_limpo["nivel_gravidade"] = df_limpo["nivel_alerta"].map(ordem_alerta)
 # Para cada regiao, pego o maior nivel de gravidade encontrado.
 # Isso garante que, se existir pelo menos um caso critico,
 # a regiao inteira sera considerada critica no resumo.
-nivel_regiao = (df_limpo.groupby("regiao")["nivel_gravidade"].max().reset_index())
+nivel_regiao = (df_limpo.groupby("regiao")[
+                "nivel_gravidade"].max().reset_index())
 
 # Dicionario inverso para converter o numero de volta para o nome do alerta.
 ordem_inversa = {
@@ -346,7 +353,8 @@ ordem_inversa = {
 }
 
 # Converto o nivel numerico de volta para texto.
-nivel_regiao["nivel_alerta_final"] = nivel_regiao["nivel_gravidade"].map(ordem_inversa)
+nivel_regiao["nivel_alerta_final"] = nivel_regiao["nivel_gravidade"].map(
+    ordem_inversa)
 
 # Seleciono apenas as colunas finais.
 nivel_regiao = nivel_regiao[["regiao", "nivel_alerta_final"]]
@@ -360,10 +368,12 @@ print("=====================")
 print("CONCLUSÕES")
 print("=====================\n")
 # Aqui eu identifico a regiao com maior total de casos suspeitos.
-regiao_mais_casos = relatorio_final.loc[relatorio_final["total_casos"].idxmax(), "regiao"]
+regiao_mais_casos = relatorio_final.loc[relatorio_final["total_casos"].idxmax(
+), "regiao"]
 
 # Aqui eu identifico a regiao com maior taxa media de incidencia.
-regiao_maior_taxa = relatorio_final.loc[relatorio_final["taxa_media_incidencia"].idxmax(), "regiao"]
+regiao_maior_taxa = relatorio_final.loc[relatorio_final["taxa_media_incidencia"].idxmax(
+), "regiao"]
 
 # Se a coluna critico existir, eu tambem identifico a regiao
 # com maior quantidade de centros criticos.

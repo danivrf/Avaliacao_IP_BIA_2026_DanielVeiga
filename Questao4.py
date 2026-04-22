@@ -5,7 +5,6 @@
 # Matricula: 202603050
 
 
-
 # Nesta questao, o objetivo e simular a logica base do jogo Primesweeper.
 
 # 1. FUNCAO PARA AVALIAR A CELULA
@@ -40,6 +39,7 @@ def avaliar_celula(n):
     # significa que o numero e primo.
     # Nesse caso, o status e MINA e o payload e None.
     return "MINA", None
+
 
 # Aqui eu executo automaticamente os casos de teste.
 print("=======================")

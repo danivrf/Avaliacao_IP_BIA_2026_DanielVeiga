@@ -181,6 +181,7 @@ def classificar_imc(row):
         else:
             return "obesidade"
 
+
 # passando cada linha como um objeto Series para a funcao.
 df["classificacao_imc"] = df.apply(classificar_imc, axis=1)
 
@@ -198,6 +199,7 @@ RISCO = {
 
 # c-i) CONTAGEM E PERCENTUAL POR CLASSIFICACAO DENTRO DE CADA FAIXA ETARIA
 
+
 def analise_contagem_percentual(df):
     print("\nContagem e Percentual\n")
 
@@ -205,7 +207,8 @@ def analise_contagem_percentual(df):
     # O .size() conta quantas pessoas existem em cada grupo.
     # Usei reset_index para transformar o resultado em um DataFrame normal,
     # o que facilita as operacoes seguintes.
-    contagem = (df.groupby(["faixa_etaria", "classificacao_imc"]).size().reset_index(name="contagem"))
+    contagem = (df.groupby(
+        ["faixa_etaria", "classificacao_imc"]).size().reset_index(name="contagem"))
 
     # Para calcular o percentual dentro de cada faixa etaria,
     # primeiro preciso saber o total de pessoas em cada faixa.
@@ -217,7 +220,8 @@ def analise_contagem_percentual(df):
     contagem = contagem.merge(total_faixa, on="faixa_etaria")
 
     # Agora consigo calcular o percentual dividindo a contagem pelo total.
-    contagem["percentual_%"] = (contagem["contagem"] / contagem["total"] * 100).round(2)
+    contagem["percentual_%"] = (
+        contagem["contagem"] / contagem["total"] * 100).round(2)
 
     # Removo a coluna total porque ela so era necessaria para o calculo.
     contagem = contagem.drop(columns="total")
@@ -226,6 +230,7 @@ def analise_contagem_percentual(df):
     print(contagem.to_string(index=False))
 
 # c-ii) IMC MEDIO, MEDIANO E DESVIO-PADRAO POR FAIXA ETARIA E SEXO
+
 
 def analise_estatisticas(df):
     print("\nEstatÍsticas do IMC\n")
@@ -242,6 +247,7 @@ def analise_estatisticas(df):
     print(estatisticas)
 
 # c-iii) TABELA COM GRUPOS DE MAIOR PROPORCAO DE RISCO (faixa etaria x sexo)
+
 
 def analise_risco(df):
     print("\nAnÁlise de Risco\n")
@@ -269,9 +275,7 @@ def analise_risco(df):
     print(risco_grupo.head(1).to_string(index=False))
 
 
-
 # RESULTADOS INICIAIS
-
 print("========================")
 print("RESULTADOS INICIAIS")
 print("========================\n")
@@ -343,7 +347,8 @@ df_abaixo_peso = df[df["classificacao_imc"] == "abaixo_peso"]
 # Antes de calcular a media, eu verifico se existe pelo menos um caso
 # para evitar erro ou resultado vazio.
 if len(df_magreza_acentuada) > 0:
-    print("IMC medio (magreza_acentuada):", round(df_magreza_acentuada["imc"].mean(), 2))
+    print("IMC medio (magreza_acentuada):", round(
+        df_magreza_acentuada["imc"].mean(), 2))
 else:
     print("IMC medio (magreza_acentuada): nao ha dados")
 
