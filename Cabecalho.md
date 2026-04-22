@@ -4,3 +4,4 @@
 # Curso: Bacharelado em Inteligência Artificial
 # Professor: Leonardo Antonio Alves
 
+# GitHub: https://github.com/danivrf/Avaliacao_IP_BIA_2026_DanielVeiga/tree/main
